@@ -29,10 +29,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate points range (1-1000 tokens max)
-    if (points < 1 || points > 1000) {
+    // Validate points range (minimum 1 token, no maximum limit)
+    if (points < 1) {
       return NextResponse.json(
-        { error: 'Invalid token amount, please try again' },
+        { error: 'Invalid token amount, must be at least 1' },
         { status: 400 }
       );
     }

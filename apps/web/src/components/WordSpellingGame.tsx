@@ -321,10 +321,12 @@ export default function WordSpellingGame() {
                 key={index}
                 className={`w-8 h-8 border-2 rounded-lg flex items-center justify-center text-base font-bold transition-all duration-300 ${
                   index < gameState.userInput.length
-                    ? 'bg-green-500 text-white border-green-500'
+                    ? gameState.userInput[index] === gameState.currentWord[index]
+                      ? 'bg-green-500 text-white border-green-500' // Correct letter - green
+                      : 'bg-red-500 text-white border-red-500'     // Wrong letter - red
                     : index < gameState.revealedLetters
-                    ? 'bg-orange-500 text-white border-orange-500'
-                    : 'bg-gray-100 border-gray-300 text-gray-400'
+                    ? 'bg-green-500 text-white border-green-500'   // Revealed letter - green
+                    : 'bg-gray-100 border-gray-300 text-gray-400'  // Empty - gray
                 }`}
               >
                 {index < gameState.userInput.length
