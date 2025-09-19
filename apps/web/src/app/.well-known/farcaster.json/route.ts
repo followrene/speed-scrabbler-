@@ -1,15 +1,19 @@
-import { getFarcasterManifest } from "@/lib/warpcast";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET() {
-  try {
-    const manifest = await getFarcasterManifest();
-    return NextResponse.json(manifest);
-  } catch (error) {
-    console.error("Error generating manifest:", error);
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 }
-    );
-  }
+  const farcasterConfig = {
+    accountAssociation: {
+      header: process.env.FARCASTER_HEADER || "",
+      payload: process.env.FARCASTER_PAYLOAD || "",
+      signature: process.env.FARCASTER_SIGNATURE || ""
+    }
+  };
+
+  // Return JSON response with proper headers
+  return NextResponse.json(farcasterConfig, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+    },
+  });
 }
