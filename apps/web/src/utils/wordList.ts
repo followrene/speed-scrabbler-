@@ -100,10 +100,10 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-// Generate a random seed based on current time to add more entropy
-function getRandomSeed(): number {
-  return Date.now() + Math.random() * 1000000;
-}
+// Generate a random seed based on current time to add more entropy (currently unused)
+// function getRandomSeed(): number {
+//   return Date.now() + Math.random() * 1000000;
+// }
 
 // Get custom words from localStorage
 function getCustomWords(): string[] {

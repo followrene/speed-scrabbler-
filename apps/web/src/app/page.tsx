@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Zap, MessageCircle, Users, TrendingUp, ArrowLeft } from "lucide-react";
+import { Zap, MessageCircle, Users, ArrowLeft } from "lucide-react";
 import WordSpellingGame from "@/components/WordSpellingGame";
 import SimpleIcon from "@/components/SimpleIcon";
 
@@ -177,7 +177,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-red-600 font-semibold">⚠</span>
-                    <span><strong>Auto-revealed letter:</strong> -10 points (happens every 20 seconds if you don't type)</span>
+                    <span><strong>Auto-revealed letter:</strong> -10 points (happens every 20 seconds if you don&apos;t type)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-red-600 font-semibold">💀</span>
@@ -201,7 +201,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-semibold">3.</span>
-                    <span>Letters auto-reveal every 20 seconds if you don't type (costs 10 points)</span>
+                    <span>Letters auto-reveal every 20 seconds if you don&apos;t type (costs 10 points)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-semibold">4.</span>

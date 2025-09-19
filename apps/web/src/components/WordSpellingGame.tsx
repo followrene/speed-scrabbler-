@@ -5,7 +5,7 @@ import { getRandomWord, scrambleWord } from '@/utils/wordList';
 import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { generateMintSignature, CONTRACT_ADDRESS, CONTRACT_ABI, CHAIN_ID } from '@/lib/contract';
-import { parseUnits } from 'viem';
+// Removed parseUnits import as it's not used
 import { WalletConnectButton } from '@/components/connect-button';
 
 interface GameState {
@@ -194,28 +194,7 @@ export default function WordSpellingGame() {
     return () => clearInterval(revealTimer);
   }, [gameState.gameStatus]);
 
-  const checkWord = () => {
-    if (gameState.userInput.toUpperCase() === gameState.currentWord.toUpperCase()) {
-      // Correct word! Calculate points: seconds left × word length
-      const pointsEarned = gameState.timeLeft * gameState.currentWord.length;
-
-      setGameState(prev => ({
-        ...prev,
-        score: prev.score + pointsEarned,
-        userInput: '',
-        revealedLetters: 0,
-      }));
-
-      // Get next word and reset timer
-      const newWord = getRandomWord();
-      setGameState(prev => ({
-        ...prev,
-        currentWord: newWord,
-        scrambledWord: scrambleWord(newWord),
-        timeLeft: 45, // Reset timer for next word
-      }));
-    }
-  };
+  // checkWord function removed - auto-check is now handled inline in the input onChange
 
   const startNewGame = () => {
     const newWord = getRandomWord();
