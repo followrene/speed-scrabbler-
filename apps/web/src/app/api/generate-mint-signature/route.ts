@@ -53,54 +53,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Read private key from contracts/.env
-    const envPath = path.join(process.cwd(), '../../apps/contracts/.env');
-    let privateKey: string;
+    // Read private key from environment variables (works both locally and on Vercel)
+    let privateKey = process.env.PRIVATE_KEY;
     
-    try {
-      if (!fs.existsSync(envPath)) {
-        console.error('Environment file not found at:', envPath);
-        console.error('Please create apps/contracts/.env with your PRIVATE_KEY');
-        return NextResponse.json(
-          { error: 'Server configuration error: Environment file not found' },
-          { status: 500 }
-        );
+    // Fallback: try reading from local file for development
+    if (!privateKey) {
+      try {
+        const envPath = path.join(process.cwd(), '../../apps/contracts/.env');
+        if (fs.existsSync(envPath)) {
+          const envContent = fs.readFileSync(envPath, 'utf8');
+          const privateKeyMatch = envContent.match(/PRIVATE_KEY=(.+)/);
+          if (privateKeyMatch) {
+            privateKey = privateKeyMatch[1].trim();
+          }
+        }
+      } catch (error) {
+        console.error('Failed to read local .env file:', error);
       }
-
-      const envContent = fs.readFileSync(envPath, 'utf8');
-      const privateKeyMatch = envContent.match(/PRIVATE_KEY=(.+)/);
-      
-      if (!privateKeyMatch) {
-        console.error('PRIVATE_KEY not found in .env file');
-        return NextResponse.json(
-          { error: 'Server configuration error: Private key not found' },
-          { status: 500 }
-        );
-      }
-
-      privateKey = privateKeyMatch[1].trim();
-      
-      if (!privateKey || privateKey === 'your_private_key_here_replace_with_actual_key') {
-        console.error('Private key not properly configured in apps/contracts/.env');
-        return NextResponse.json(
-          { error: 'Server configuration error: Please configure your private key' },
-          { status: 500 }
-        );
-      }
-
-      // Validate private key format
-      if (!privateKey.startsWith('0x') || privateKey.length !== 66) {
-        console.error('Invalid private key format');
-        return NextResponse.json(
-          { error: 'Server configuration error: Invalid private key format' },
-          { status: 500 }
-        );
-      }
-      
-    } catch (error) {
-      console.error('Failed to read private key:', error);
+    }
+    
+    if (!privateKey || privateKey === 'your_private_key_here_replace_with_actual_key') {
+      console.error('Private key not configured. Please set PRIVATE_KEY environment variable.');
       return NextResponse.json(
-        { error: 'Server configuration error: Failed to read environment file' },
+        { error: 'Server configuration error: Private key not configured' },
+        { status: 500 }
+      );
+    }
+
+    // Validate private key format
+    if (!privateKey.startsWith('0x') || privateKey.length !== 66) {
+      console.error('Invalid private key format');
+      return NextResponse.json(
+        { error: 'Server configuration error: Invalid private key format' },
         { status: 500 }
       );
     }
