@@ -35,7 +35,15 @@ export const metadata: Metadata = {
     images: [`${appUrl}/opengraph-image.png`],
   },
   other: {
-    "fc:frame": JSON.stringify(frame),
+    // Farcaster frame metadata
+    "fc:frame": "vNext",
+    "fc:frame:image": `${appUrl}/opengraph-image.png`,
+    "fc:frame:button:1": "Play Speed Scrabbler",
+    "fc:frame:button:1:action": "link",
+    "fc:frame:button:1:target": appUrl,
+    
+    // Original frame metadata for compatibility
+    "fc:frame:json": JSON.stringify(frame),
   },
 };
 
