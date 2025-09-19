@@ -92,7 +92,7 @@ importers:
     dependencies:
       '@farcaster/frame-core':
         specifier: latest
-        version: 0.3.8(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
+        version: 0.3.9(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       '@farcaster/frame-sdk':
         specifier: ^0.0.61
         version: 0.0.61(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -101,7 +101,7 @@ importers:
         version: 1.0.0(@farcaster/miniapp-sdk@0.1.9(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@2.19.0(@tanstack/query-core@5.85.5)(@types/react@18.3.24)(immer@10.0.2)(react@18.3.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@farcaster/quick-auth':
         specifier: latest
-        version: 0.0.7(typescript@5.9.2)
+        version: 0.0.8(typescript@5.9.2)
       '@radix-ui/react-dialog':
         specifier: ^1.0.5
         version: 1.1.15(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -123,6 +123,9 @@ importers:
       eruda:
         specifier: ^3.2.3
         version: 3.4.3
+      ethers:
+        specifier: ^6.15.0
+        version: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       jose:
         specifier: ^5.9.6
         version: 5.10.0
@@ -365,14 +368,17 @@ packages:
   '@farcaster/frame-core@0.1.8':
     resolution: {integrity: sha512-Y0JATQXa/iaqH3pCp8Dby4iCQbwqw7JJaGtfzUazdr7R+zs3EDP8DYQCkqJu6iGjE9gqgecB+b+DOZpnqMTDNw==}
 
-  '@farcaster/frame-core@0.3.8':
-    resolution: {integrity: sha512-tgdrj+bcaTCiqNxR8jAug8u2H+xxEjV12/kwgFrUNeeXHrooERDRVUvXdoRn0aF64ZQuoRQ1eStYNf+EZITDXQ==}
+  '@farcaster/frame-core@0.3.9':
+    resolution: {integrity: sha512-4sa5jaKdBW3pzlyksobkmqb5xPjo/Fe8aHnZ/WHsO5zPelEccBJ12B42AiYx4iJ175uP7dOs4bpuwpnJ8fLLMA==}
 
   '@farcaster/frame-sdk@0.0.61':
     resolution: {integrity: sha512-FvujZY/Xw7Ar6V4iFkZWK6b2s2oyuEWxB5Pb9KyNr5jSq8lGdF8HfsO+gWFBej+X13aEOQG1btm7nEvwhYrebQ==}
 
   '@farcaster/miniapp-core@0.3.8':
     resolution: {integrity: sha512-LaRG1L3lxHqo5pP/E2CX9hNqusR0C8hX3QTV2+hzmQJz6IGvmSpH6Q9ivlLyDfbdqokiMFo5Y3Z1EX1zBHMEQQ==}
+
+  '@farcaster/miniapp-core@0.3.9':
+    resolution: {integrity: sha512-7k2AHYycFABUEQFHGqsuZr6P6UQOE2WO4/Qj/kQ1ydKA8QjrWxO4HjiPfnTdvqH0xOKtdavbFOV5lK5bDLkemw==}
 
   '@farcaster/miniapp-sdk@0.1.9':
     resolution: {integrity: sha512-hn0dlIy0JP2Hx6PgKcn9bjYwyPS/SQgYJ/a0qjzG8ZsDfUdjsMPf3yI/jicBipTml/UUoKcbqXM68fsrsbNMKA==}
@@ -389,8 +395,8 @@ packages:
     peerDependencies:
       typescript: 5.8.3
 
-  '@farcaster/quick-auth@0.0.7':
-    resolution: {integrity: sha512-FNHlizdwjLmX7MQjsArGuj7SVfrQ9UCqk9JIiMaBt/J9WtIEZQxFtilKYjaIDyd4gZiZ9EImKVvR2bVyd8ExeQ==}
+  '@farcaster/quick-auth@0.0.8':
+    resolution: {integrity: sha512-NRIq1BcbcQCC6xBF5owfckkY00xKQVpqhpLNl5rICVpl0xeDsiVbkenIrHaUuyjtCK2W28YVc2ZCFRyz9ERHKg==}
     peerDependencies:
       typescript: 5.8.3
 
@@ -5415,9 +5421,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@farcaster/frame-core@0.3.8(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)':
+  '@farcaster/frame-core@0.3.9(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)':
     dependencies:
-      '@farcaster/miniapp-core': 0.3.8(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
+      '@farcaster/miniapp-core': 0.3.9(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       ox: 0.4.4(typescript@5.9.2)(zod@3.25.76)
       zod: 3.25.76
@@ -5442,6 +5448,17 @@ snapshots:
       - zod
 
   '@farcaster/miniapp-core@0.3.8(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@solana/web3.js': 1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
+      ox: 0.4.4(typescript@5.9.2)(zod@3.25.76)
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - typescript
+      - utf-8-validate
+
+  '@farcaster/miniapp-core@0.3.9(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@solana/web3.js': 1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       ox: 0.4.4(typescript@5.9.2)(zod@3.25.76)
@@ -5478,7 +5495,7 @@ snapshots:
       typescript: 5.9.2
       zod: 3.25.76
 
-  '@farcaster/quick-auth@0.0.7(typescript@5.9.2)':
+  '@farcaster/quick-auth@0.0.8(typescript@5.9.2)':
     dependencies:
       jose: 5.10.0
       typescript: 5.9.2

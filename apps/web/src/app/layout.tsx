@@ -14,10 +14,10 @@ const frame = {
   version: "1",
   imageUrl: `${appUrl}/opengraph-image.png`,
   button: {
-    title: "Launch Farcaster-Game-Celo",
+    title: "Launch Speed Scrabbler",
     action: {
       type: "launch_frame",
-      name: "Farcaster-Game-Celo",
+      name: "Speed Scrabbler",
       url: appUrl,
       splashImageUrl: `${appUrl}/icon.png`,
       splashBackgroundColor: "#ffffff",
@@ -26,10 +26,11 @@ const frame = {
 };
 
 export const metadata: Metadata = {
-  title: 'Farcaster-Game-Celo',
+  title: 'Speed Scrabbler',
   description: 'A new game for Celo people on Farcaster',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',
   openGraph: {
-    title: 'Farcaster-Game-Celo',
+    title: 'Speed Scrabbler',
     description: 'A new game for Celo people on Farcaster',
     images: [`${appUrl}/opengraph-image.png`],
   },

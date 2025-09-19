@@ -1,6 +1,6 @@
-# Farcaster-Game-Celo - Smart Contracts
+# Speed Scrabbler - Smart Contracts
 
-This directory contains the smart contracts for Farcaster-Game-Celo, built with Hardhat and optimized for the Celo blockchain.
+This directory contains the smart contracts for Speed Scrabbler, built with Hardhat and optimized for the Celo blockchain.
 
 ## 🚀 Quick Start
 

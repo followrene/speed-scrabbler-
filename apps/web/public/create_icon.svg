@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main Orange Square with Rounded Corners -->
+  <rect x="8" y="8" width="48" height="48" rx="12" fill="#FF6B35" filter="url(#glow)"/>
+  
+  <!-- Stylized Letter S -->
+  <path d="M20 20C16 20 13 22 13 25C13 27 14 29 16 30C14 31 13 33 13 35C13 38 16 40 20 40C24 40 27 38 27 35C27 33 26 31 24 30C26 29 27 27 27 25C27 22 24 20 20 20Z" fill="#FF8C42"/>
+  
+  <!-- Speed Line extending from S -->
+  <rect x="12" y="30" width="8" height="2" rx="1" fill="#FF8C42" opacity="0.8"/>
+</svg>

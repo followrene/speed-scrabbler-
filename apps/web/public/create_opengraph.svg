@@ -1,0 +1,32 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#000000"/>
+  
+  <!-- Glowing Orange Square -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="orangeGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stopColor="#FF8C42"/>
+      <stop offset="100%" stopColor="#FF6B35"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Main Icon -->
+  <rect x="450" y="165" width="300" height="300" rx="75" fill="url(#orangeGradient)" filter="url(#glow)"/>
+  
+  <!-- Letter S -->
+  <path d="M540 240C510 240 480 255 480 285C480 315 495 345 525 360C495 375 480 405 480 435C480 465 510 480 540 480C570 480 600 465 600 435C600 405 585 375 555 360C585 345 600 315 600 285C600 255 570 240 540 240Z" fill="#FFFFFF"/>
+  
+  <!-- Speed Line -->
+  <rect x="480" y="360" width="60" height="12" rx="6" fill="#FFFFFF" opacity="0.9"/>
+  
+  <!-- Title Text -->
+  <text x="600" y="520" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Speed Scrabbler</text>
+  <text x="600" y="570" font-family="Arial, sans-serif" font-size="36" fill="#FF8C42" text-anchor="middle">Word Scramble Game</text>
+</svg>

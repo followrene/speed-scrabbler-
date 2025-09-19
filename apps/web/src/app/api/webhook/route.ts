@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       // Send a test notification
       await sendFrameNotification({
         fid,
-        title: "Welcome to Farcaster-Game-Celo!",
+        title: "Welcome to Speed Scrabbler!",
         body: "You've successfully enabled notifications.",
       });
 

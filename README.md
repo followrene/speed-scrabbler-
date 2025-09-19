@@ -1,29 +1,42 @@
-# Farcaster-Game-Celo
+# Speed Scrabbler
 
-A new game for Celo people on Farcaster
+A fast-paced word scramble game built on Celo and Farcaster. Test your spelling skills by unscrambling letters while racing against time!
 
-A modern Celo blockchain application built with Next.js, TypeScript, and Turborepo.
+## Features
 
-## Getting Started
+- **Progressive Difficulty**: Start with 3-letter words, progress to 9-letter words
+- **30-Second Timer**: Each word gets a fresh 30-second timer
+- **Smart Hints**: Auto-revealing letters with point penalties
+- **Explosion Effects**: Satisfying visual feedback for word completion
+- **Celo Integration**: Built on the Celo blockchain
+- **Farcaster Ready**: Optimized for Farcaster Mini Apps
 
-1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+## Game Rules
 
-2. Start the development server:
-   ```bash
-   pnpm dev
-   ```
-
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+1. **Round 1**: 3 words × 3 letters each
+2. **Round 2**: 3 words × 4 letters each  
+3. **Round 3**: 3 words × 5 letters each
+4. **Continue**: Word length increases each round (max 9 letters)
+5. **Scoring**: +10 points per word + time bonus, -10 points per auto-revealed letter
+6. **Game Over**: When time runs out OR score goes below 0
 
 ## Project Structure
 
 This is a monorepo managed by Turborepo with the following structure:
 
-- `apps/web` - Next.js application with embedded UI components and utilities
-- `apps/hardhat` - Smart contract development environment
+- `apps/web` - Next.js application with the Speed Scrabbler game
+- `packages/hardhat` - Smart contract development environment
+
+## Getting Started
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+cd apps/web
+pnpm dev
+```
 
 ## Available Scripts
 
@@ -42,13 +55,22 @@ This is a monorepo managed by Turborepo with the following structure:
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
+- **Frontend**: Next.js 14, React, TypeScript
+- **Styling**: Tailwind CSS, ShadCN Components
 - **Smart Contracts**: Hardhat with Viem
+- **Blockchain**: Celo Network
+- **Social**: Farcaster Integration
 - **Monorepo**: Turborepo
 - **Package Manager**: PNPM
+- **Deployment**: Vercel-ready
+
+## Farcaster Integration
+
+This app is designed as a Farcaster Mini App with:
+- Progressive Web App (PWA) capabilities
+- Farcaster manifest endpoint
+- Mobile-optimized UI
+- Social sharing features
 
 ## Learn More
 
@@ -56,3 +78,7 @@ This is a monorepo managed by Turborepo with the following structure:
 - [Celo Documentation](https://docs.celo.org/)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
+
+## License
+
+MIT License - see LICENSE file for details.

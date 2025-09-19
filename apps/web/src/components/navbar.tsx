@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { WalletConnectButton } from "@/components/connect-button"
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -36,7 +37,7 @@ export function Navbar() {
               <div className="flex items-center gap-2 mb-8">
 
                 <span className="font-bold text-lg">
-                  Farcaster-Game-Celo
+                  Speed Scrabbler
                 </span>
               </div>
               <nav className="flex flex-col gap-4">
@@ -55,7 +56,7 @@ export function Navbar() {
                   </Link>
                 ))}
                 <div className="mt-6 pt-6 border-t">
-                  <Button className="w-full">Connect Wallet</Button>
+                  <WalletConnectButton />
                 </div>
               </nav>
             </SheetContent>
@@ -65,7 +66,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
 
             <span className="hidden font-bold text-xl sm:inline-block">
-              Farcaster-Game-Celo
+              Speed Scrabbler
             </span>
           </Link>
         </div>
@@ -90,7 +91,7 @@ export function Navbar() {
           ))}
           
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">Connect Wallet</Button>
+            <WalletConnectButton />
           </div>
         </nav>
       </div>

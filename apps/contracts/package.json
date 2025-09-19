@@ -1,7 +1,7 @@
 {
   "name": "hardhat",
   "version": "1.0.0",
-  "description": "Smart contracts for Farcaster-Game-Celo",
+  "description": "Smart contracts for Speed Scrabbler",
   "main": "index.js",
   "scripts": {
     "build": "hardhat compile",

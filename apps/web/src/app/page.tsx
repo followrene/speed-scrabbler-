@@ -1,169 +1,259 @@
-"use client";
-import { useMiniApp } from "@/contexts/miniapp-context";
-import { sdk } from "@farcaster/frame-sdk";
-import { useState, useEffect } from "react";
-import { useAccount, useConnect } from "wagmi";
+'use client';
+
+import { useState } from 'react';
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Zap, MessageCircle, Users, TrendingUp, ArrowLeft } from "lucide-react";
+import WordSpellingGame from "@/components/WordSpellingGame";
+import SimpleIcon from "@/components/SimpleIcon";
+
+type GameScreen = 'welcome' | 'game' | 'features';
 
 export default function Home() {
-  const { context, isMiniAppReady } = useMiniApp();
-  const [isAddingMiniApp, setIsAddingMiniApp] = useState(false);
-  const [addMiniAppMessage, setAddMiniAppMessage] = useState<string | null>(null);
-  
-  // Wallet connection hooks
-  const { address, isConnected, isConnecting } = useAccount();
-  const { connect, connectors } = useConnect();
-  
-  // Auto-connect wallet when miniapp is ready
-  useEffect(() => {
-    if (isMiniAppReady && !isConnected && !isConnecting && connectors.length > 0) {
-      const farcasterConnector = connectors.find(c => c.id === 'farcaster');
-      if (farcasterConnector) {
-        connect({ connector: farcasterConnector });
-      }
-    }
-  }, [isMiniAppReady, isConnected, isConnecting, connectors, connect]);
-  
-  // Extract user data from context
-  const user = context?.user;
-  // Use connected wallet address if available, otherwise fall back to user custody/verification
-  const walletAddress = address || user?.custody || user?.verifications?.[0] || "0x1e4B...605B";
-  const displayName = user?.displayName || user?.username || "User";
-  const username = user?.username || "@user";
-  const pfpUrl = user?.pfpUrl;
-  
-  // Format wallet address to show first 6 and last 4 characters
-  const formatAddress = (address: string) => {
-    if (!address || address.length < 10) return address;
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-  
-  if (!isMiniAppReady) {
-    return (
-      <main className="flex-1">
-        <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-          <div className="w-full max-w-md mx-auto p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading...</p>
-          </div>
-        </section>
-      </main>
-    );
-  }
-  
-  return (
-    <main className="flex-1">
-      <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="w-full max-w-md mx-auto p-8 text-center">
-          {/* Welcome Header */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome
-          </h1>
-          
-          {/* Status Message */}
-          <p className="text-lg text-gray-600 mb-6">
-            You are signed in!
-          </p>
-          
-          {/* User Wallet Address */}
-          <div className="mb-8">
-            <div className="bg-white/20 backdrop-blur-sm px-4 py-3 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-600 font-medium">Wallet Status</span>
-                <div className={`flex items-center gap-1 text-xs ${
-                  isConnected ? 'text-green-600' : isConnecting ? 'text-yellow-600' : 'text-gray-500'
-                }`}>
-                  <div className={`w-2 h-2 rounded-full ${
-                    isConnected ? 'bg-green-500' : isConnecting ? 'bg-yellow-500' : 'bg-gray-400'
-                  }`}></div>
-                  {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : 'Disconnected'}
-                </div>
-              </div>
-              <p className="text-sm text-gray-700 font-mono">
-                {formatAddress(walletAddress)}
-              </p>
+  const [currentScreen, setCurrentScreen] = useState<GameScreen>('welcome');
+
+  const renderWelcomeScreen = () => (
+    <>
+      {/* Hero Section - More Compact */}
+      <section className="relative py-12 lg:py-20">
+        <div className="container px-4 mx-auto max-w-7xl">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Game Logo */}
+            <div className="flex justify-center mb-6">
+              <SimpleIcon size={160} className="drop-shadow-2xl animate-pulse" />
             </div>
-          </div>
-          
-          {/* User Profile Section */}
-          <div className="mb-8">
-            {/* Profile Avatar */}
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center overflow-hidden">
-              {pfpUrl ? (
-                <img 
-                  src={pfpUrl} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
-                <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                </div>
-              )}
+
+            {/* Main Heading */}
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+              Welcome to{" "}
+              <span className="text-primary">Speed Scrabbler</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+              Test your spelling skills with our word scramble game! Unscramble letters to form words while racing against a 45-second timer per word. 
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <Button 
+                size="lg" 
+                className="px-8 py-3 text-base font-medium"
+                onClick={() => setCurrentScreen('game')}
+              >
+                Start Playing
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="px-8 py-3 text-base font-medium"
+                onClick={() => setCurrentScreen('features')}
+              >
+                Learn More
+              </Button>
+              <Link href="/custom-words">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="px-8 py-3 text-base font-medium"
+                >
+                  Custom Word List
+                </Button>
+              </Link>
             </div>
-            
-            {/* Profile Info */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-1">
-                {displayName}
-              </h2>
-              <p className="text-gray-500">
-                {username.startsWith('@') ? username : `@${username}`}
-              </p>
+            {/* Badge - Moved to bottom */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium bg-primary/10 text-primary rounded-full border border-primary/20">
+              <MessageCircle className="h-4 w-4" />
+              Built on Celo + Farcaster
             </div>
-          </div>
-          
-          {/* Add Miniapp Button */}
-          <div className="mb-6">
-            <button
-              onClick={async () => {
-                if (isAddingMiniApp) return;
-                
-                setIsAddingMiniApp(true);
-                setAddMiniAppMessage(null);
-                
-                try {
-                  const result = await sdk.actions.addMiniApp();
-                  if (result.added) {
-                    setAddMiniAppMessage("✅ Miniapp added successfully!");
-                  } else {
-                    setAddMiniAppMessage("ℹ️ Miniapp was not added (user declined or already exists)");
-                  }
-                } catch (error: any) {
-                  console.error('Add miniapp error:', error);
-                  if (error?.message?.includes('domain')) {
-                    setAddMiniAppMessage("⚠️ This miniapp can only be added from its official domain");
-                  } else {
-                    setAddMiniAppMessage("❌ Failed to add miniapp. Please try again.");
-                  }
-                } finally {
-                  setIsAddingMiniApp(false);
-                }
-              }}
-              disabled={isAddingMiniApp}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-            >
-              {isAddingMiniApp ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Adding...
-                </>
-              ) : (
-                <>
-                  <span>📱</span>
-                  Add Miniapp
-                </>
-              )}
-            </button>
-            
-            {/* Add Miniapp Status Message */}
-            {addMiniAppMessage && (
-              <div className="mt-3 p-3 bg-white/30 backdrop-blur-sm rounded-lg">
-                <p className="text-sm text-gray-700">{addMiniAppMessage}</p>
-              </div>
-            )}
           </div>
         </div>
       </section>
+    </>
+  );
+
+  const renderGameScreen = () => (
+    <section className="py-12">
+      <div className="container px-4 mx-auto max-w-7xl">
+        {/* Game Component */}
+        <div className="flex justify-center">
+          <WordSpellingGame />
+        </div>
+        
+        {/* Back Button - Moved to bottom */}
+        <div className="mt-12 text-center">
+          <Button 
+            variant="outline" 
+            onClick={() => setCurrentScreen('welcome')}
+            className="flex items-center gap-2 mx-auto"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Menu
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+
+  const renderFeaturesScreen = () => (
+    <>
+      {/* Features Header - More Compact */}
+      <section className="relative py-12 lg:py-20">
+        <div className="container px-4 mx-auto max-w-7xl">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Back Button */}
+            <div className="mb-6 flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setCurrentScreen('welcome')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Menu
+              </Button>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+              Game Features
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+              Discover what makes Speed Scrabbler exciting and challenging!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid - More Compact */}
+      <section className="py-16 bg-muted/50">
+        <div className="container px-4 mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-full mb-4">
+                <Zap className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Fast-Paced Action</h3>
+              <p className="text-muted-foreground">
+                45-second countdown timer per word keeps the excitement high and challenges your speed.
+              </p>
+            </div>
+
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-full mb-4">
+                <MessageCircle className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Smart Hints with Penalty</h3>
+              <p className="text-muted-foreground">
+                Auto-revealing letters every 20 seconds help you when stuck, but cost 10 points each! Revealed letters are automatically filled in.
+              </p>
+            </div>
+
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-full mb-4">
+                <Users className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Progressive Difficulty</h3>
+              <p className="text-muted-foreground">
+                Start with 3-letter words in Round 1, then progress to 4, 5, 6, 7, 8, and finally 9-letter words in later rounds.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Detailed Features - More Compact */}
+      <section className="py-16">
+        <div className="container px-4 mx-auto max-w-4xl">
+          <div className="space-y-10">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-4">How Scoring Works</h2>
+              <div className="bg-muted/50 p-6 rounded-lg">
+                <ul className="text-left space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-600 font-semibold">✓</span>
+                    <span><strong>Correct word:</strong> +10 points + bonus points for remaining time</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-red-600 font-semibold">⚠</span>
+                    <span><strong>Auto-revealed letter:</strong> -10 points (happens every 20 seconds if you don't type)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-red-600 font-semibold">💀</span>
+                    <span><strong>Game over:</strong> When time runs out OR when your score goes below 0</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-4">Game Rules</h2>
+              <div className="bg-muted/50 p-6 rounded-lg">
+                <ul className="text-left space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 font-semibold">1.</span>
+                    <span>Type letters on your keyboard to spell the word</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 font-semibold">2.</span>
+                    <span>Use Backspace or the Back button to correct mistakes</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 font-semibold">3.</span>
+                    <span>Letters auto-reveal every 20 seconds if you don't type (costs 10 points)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 font-semibold">4.</span>
+                    <span>Complete as many words as possible in 120 seconds</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 font-semibold">5.</span>
+                    <span>Game ends if time runs out OR score goes below 0</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Get Started Section - More Compact */}
+      <section className="py-16 bg-muted/50">
+        <div className="container px-4 mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Challenge Yourself?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-6">
+            Test your spelling skills and see how many words you can unscramble in 120 seconds!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="px-8 py-3"
+              onClick={() => setCurrentScreen('game')}
+            >
+              Start Playing Now
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="px-8 py-3"
+              onClick={() => setCurrentScreen('welcome')}
+            >
+              Back to Menu
+            </Button>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+
+  return (
+    <main className="flex-1">
+      {currentScreen === 'welcome' && renderWelcomeScreen()}
+      {currentScreen === 'game' && renderGameScreen()}
+      {currentScreen === 'features' && renderFeaturesScreen()}
     </main>
   );
 }

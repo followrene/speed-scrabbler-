@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
  * @returns The farcaster manifest for the frame
  */
 export async function getFarcasterManifest() {
-  const frameName = "Farcaster-Game-Celo";
+  const frameName = "Speed Scrabbler";
   const appUrl = env.NEXT_PUBLIC_URL;
   const noindex = appUrl.includes("localhost") || appUrl.includes("ngrok") || appUrl.includes("https://dev.");
 
@@ -35,7 +35,7 @@ export async function getFarcasterManifest() {
   } : {
     // Development fallback - these are placeholder values for local testing
     header: "eyJmaWQiOjEyMzQ1LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4ZGV2ZWxvcG1lbnRfa2V5In0",
-    payload: "eyJkb21haW4iOiJsb2NhbGhvc3QifQ",
+    payload: "eyJkb21haW5iOiJsb2NhbGhvc3QifQ",
     signature: "0xdev_signature_placeholder_for_local_testing_only"
   };
 
@@ -47,18 +47,18 @@ export async function getFarcasterManifest() {
       iconUrl: `${appUrl}/icon.png`,
       homeUrl: appUrl,
       imageUrl: `${appUrl}/opengraph-image.png`,
-      buttonTitle: `Launch App`,
+      buttonTitle: `Play Speed Scrabbler`,
       splashImageUrl: `${appUrl}/opengraph-image.png`,
       splashBackgroundColor: "#FFFFFF",
       webhookUrl: `${appUrl}/api/webhook`,
       // Metadata https://github.com/farcasterxyz/miniapps/discussions/191
-      subtitle: "A new game for Celo people on Farcaster", // 30 characters, no emojis or special characters, short description under app name
-      description: "A new game for Celo people on Farcaster", // 170 characters, no emojis or special characters, promotional message displayed on Mini App Page
-      primaryCategory: "social",
-      tags: ["mini-app", "celo"], // up to 5 tags, filtering/search tags
-      tagline: "Built on Celo", // 30 characters, marketing tagline should be punchy and descriptive
+      subtitle: "A new game for Celo folks", // 30 characters, no emojis or special characters, short description under app name
+      description: "Test your spelling skills with our word scramble game! Unscramble letters to form words while racing against a 120-second timer.", // 170 characters, no emojis or special characters, promotional message displayed on Mini App Page
+      primaryCategory: "games",
+      tags: ["mini-app", "celo", "word-game", "spelling", "puzzle"], // up to 5 tags, filtering/search tags
+      tagline: "Spell and Win USDT on Celo", // 30 characters, marketing tagline should be punchy and descriptive
       ogTitle: `${frameName}`, // 30 characters, app name + short tag, Title case, no emojis
-      ogDescription: "A new game for Celo people on Farcaster", // 100 characters, summarize core benefits in 1-2 lines
+      ogDescription: "Race against time to unscramble letters!", // 100 characters, summarize core benefits in 1-2 lines
       screenshotUrls: [
         // 1284 x 2778, visual previews of the app, max 3 screenshots
         `${appUrl}/opengraph-image.png`,

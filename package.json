@@ -1,7 +1,7 @@
 {
-  "name": "Farcaster-Game-Celo",
+  "name": "speed-scrabbler",
   "version": "0.1.0",
-  "description": "A new game for Celo people on Farcaster",
+  "description": "A fast-paced word scramble game built on Celo and Farcaster",
   "private": true,
   "scripts": {
     "build": "turbo build",
