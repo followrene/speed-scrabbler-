@@ -1,0 +1,553 @@
+'use client';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { getRandomWordByLength, scrambleWord } from '@/utils/wordList';
+import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard';
+
+interface GameState {
+  currentWord: string;
+  scrambledWord: string;
+  userInput: string;
+  timeLeft: number;
+  score: number;
+  round: number;
+  gameStatus: 'playing' | 'paused' | 'gameOver';
+  revealedLetters: number;
+  currentWordIndex: number;
+  wordsInRound: string[];
+  currentWordLength: number;
+  usedLetters: Set<string>; // Track which letters have been used
+}
+
+export default function WordSpellingGame() {
+  const { showKeyboard, hideKeyboard } = useMobileKeyboard();
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  const [gameState, setGameState] = useState<GameState>({
+    currentWord: '',
+    scrambledWord: '',
+    userInput: '',
+    timeLeft: 30, // 30 seconds per word
+    score: 50, // Start with 50 points
+    round: 1, // Start with round 1
+    gameStatus: 'playing',
+    revealedLetters: 0,
+    currentWordIndex: 0,
+    wordsInRound: [], // Start with empty array
+    currentWordLength: 3, // Start with 3-letter words
+    usedLetters: new Set(), // Track used letters
+  });
+
+  const [nextRevealTime, setNextRevealTime] = useState<number>(Date.now() + 20000);
+
+  // Initialize first round - Reset game state every time component mounts
+  // This ensures a fresh start with Round 1, 50 points, and 3-letter words every time the app is opened
+  useEffect(() => {
+    // Reset game state to initial values
+    const initialWordLength = 3;
+    const wordsInRound: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      wordsInRound.push(getRandomWordByLength(initialWordLength));
+    }
+
+    console.log(`Initializing game with Round 1, ${initialWordLength}-letter words: ${wordsInRound.join(', ')}`);
+
+    setGameState(prev => ({
+      ...prev,
+      timeLeft: 30,
+      score: 50, // Reset to 50 points
+      round: 1, // Reset to round 1
+      gameStatus: 'playing',
+      revealedLetters: 0,
+      currentWordIndex: 0,
+      wordsInRound,
+      currentWord: wordsInRound[0],
+      scrambledWord: scrambleWord(wordsInRound[0]),
+      userInput: '',
+      usedLetters: new Set(),
+      currentWordLength: initialWordLength,
+    }));
+
+    setNextRevealTime(Date.now() + 20000);
+  }, []); // Empty dependency array ensures this runs every time component mounts
+
+  // Timer countdown
+  useEffect(() => {
+    if (gameState.gameStatus !== 'playing') return;
+
+    const timer = setInterval(() => {
+      setGameState(prev => {
+        if (prev.timeLeft <= 1) {
+          return { ...prev, gameStatus: 'gameOver' as const };
+        }
+        return { ...prev, timeLeft: prev.timeLeft - 1 };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameState.gameStatus]);
+
+  // Auto-reveal letters every 20 seconds with point deduction
+  useEffect(() => {
+    if (gameState.gameStatus !== 'playing') return;
+
+    const revealTimer = setInterval(() => {
+      setGameState(prev => {
+        if (prev.revealedLetters < prev.currentWord.length) {
+          const newScore = prev.score - 10; // Deduct 10 points for auto-reveal
+
+          // Check if score goes below 0 - game over
+          if (newScore < 0) {
+            return { ...prev, score: 0, gameStatus: 'gameOver' as const };
+          }
+
+          // Auto-fill the revealed letter into user input
+          const newRevealedLetters = prev.revealedLetters + 1;
+          const newUserInput = prev.currentWord.slice(0, newRevealedLetters);
+
+          // Mark revealed letters as used
+          const newUsedLetters = new Set(prev.usedLetters);
+          for (let i = 0; i < newRevealedLetters; i++) {
+            newUsedLetters.add(prev.currentWord[i]);
+          }
+
+          return {
+            ...prev,
+            revealedLetters: newRevealedLetters,
+            score: newScore,
+            userInput: newUserInput, // Auto-fill the revealed letters
+            usedLetters: newUsedLetters
+          };
+        }
+        return prev;
+      });
+    }, 20000);
+
+    return () => clearInterval(revealTimer);
+  }, [gameState.gameStatus]);
+
+  // Keyboard input handling
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (gameState.gameStatus !== 'playing') return;
+
+      const key = event.key.toUpperCase();
+
+      // Check if the pressed key is one of the available letters
+      if (gameState.scrambledWord.includes(key) &&
+          gameState.userInput.length < gameState.currentWord.length &&
+          !gameState.usedLetters.has(key)) {
+        handleLetterInput(key);
+      }
+
+      // Handle backspace
+      if (event.key === 'Backspace') {
+        event.preventDefault();
+        handleBackspace();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState.gameStatus, gameState.scrambledWord, gameState.userInput.length, gameState.usedLetters]);
+
+  const startNewRound = useCallback((wordLength?: number, incrementRound: boolean = false) => {
+    // Use provided word length or current state length
+    const targetWordLength = wordLength ?? gameState.currentWordLength;
+    
+    console.log(`startNewRound called with wordLength=${wordLength}, targetWordLength=${targetWordLength}, incrementRound=${incrementRound}`);
+    console.log(`Current state: round=${gameState.round}, currentWordLength=${gameState.currentWordLength}`);
+    
+    // Generate 3 random words of the target length
+    const wordsInRound: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      wordsInRound.push(getRandomWordByLength(targetWordLength));
+    }
+
+    console.log(`Generated words: ${wordsInRound.join(', ')} (${targetWordLength} letters each)`);
+
+    setGameState(prev => {
+      console.log(`Setting new game state with wordLength: ${targetWordLength}, round: ${prev.round}`);
+      return {
+        ...prev,
+        timeLeft: 30, // Reset to 30 seconds for new word
+        revealedLetters: 0,
+        currentWordIndex: 0,
+        wordsInRound,
+        currentWord: wordsInRound[0],
+        scrambledWord: scrambleWord(wordsInRound[0]),
+        userInput: '',
+        usedLetters: new Set(),
+        currentWordLength: targetWordLength,
+        round: incrementRound ? prev.round + 1 : prev.round,
+        // Don't reset score here - only reset for initial game start
+      };
+    });
+
+    setNextRevealTime(Date.now() + 20000);
+  }, [gameState.currentWordLength]);
+
+  const startNextRound = useCallback(() => {
+    // Calculate new word length for next round
+    const newWordLength = Math.min(gameState.currentWordLength + 1, 9);
+    
+    console.log(`Moving from Round ${gameState.round} (${gameState.currentWordLength}-letter words) to Round ${gameState.round + 1} (${newWordLength}-letter words)`);
+
+    // Start new round with the new word length and increment round number
+    startNewRound(newWordLength, true);
+  }, [gameState.currentWordLength, startNewRound]);
+
+  const handleLetterInput = (letter: string) => {
+    if (gameState.gameStatus !== 'playing') return;
+
+    setGameState(prev => {
+      const newUserInput = prev.userInput + letter;
+      const newUsedLetters = new Set(prev.usedLetters);
+      newUsedLetters.add(letter);
+
+      return {
+        ...prev,
+        userInput: newUserInput,
+        usedLetters: newUsedLetters,
+      };
+    });
+  };
+
+  const handleBackspace = () => {
+    if (gameState.gameStatus !== 'playing') return;
+
+    setGameState(prev => {
+      if (prev.userInput.length === 0) return prev;
+
+      const newUserInput = prev.userInput.slice(0, -1);
+      const lastLetter = prev.userInput[prev.userInput.length - 1];
+      
+      // Remove the last letter from used letters
+      const newUsedLetters = new Set(prev.usedLetters);
+      newUsedLetters.delete(lastLetter);
+
+      return {
+        ...prev,
+        userInput: newUserInput,
+        usedLetters: newUsedLetters,
+      };
+    });
+  };
+
+  const checkWord = () => {
+    if (gameState.userInput === gameState.currentWord) {
+      // Correct word!
+      const timeBonus = Math.floor(gameState.timeLeft / 10);
+      const roundScore = 10 + timeBonus;
+
+      setGameState(prev => ({
+        ...prev,
+        score: prev.score + roundScore,
+        userInput: '',
+        revealedLetters: 0,
+        usedLetters: new Set(), // Reset for next word
+      }));
+
+      // Check if we've completed all words in this round
+      if (gameState.currentWordIndex < gameState.wordsInRound.length - 1) {
+        // Move to next word in current round
+        const nextWordIndex = gameState.currentWordIndex + 1;
+        const nextWord = gameState.wordsInRound[nextWordIndex];
+        
+        console.log(`Completed word ${gameState.currentWordIndex + 1} of 3 in Round ${gameState.round}. Moving to word ${nextWordIndex + 1}: "${nextWord}" (${nextWord.length} letters)`);
+
+        setTimeout(() => {
+          setGameState(prev => ({
+            ...prev,
+            currentWordIndex: nextWordIndex,
+            currentWord: nextWord,
+            scrambledWord: scrambleWord(nextWord),
+            userInput: '',
+            revealedLetters: 0,
+            usedLetters: new Set(), // Reset for new word
+            timeLeft: 30, // Reset timer to 30 seconds for new word
+          }));
+          setNextRevealTime(Date.now() + 20000);
+          
+          // Focus input for next word on mobile
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, 100);
+        }, 1000);
+      } else {
+        // Round completed, move to next round
+        console.log(`Completed all 3 words in Round ${gameState.round}! Moving to next round.`);
+        console.log(`Current word length: ${gameState.currentWordLength}, will move to: ${gameState.currentWordLength + 1} letters`);
+        
+        setTimeout(() => {
+          startNextRound();
+        }, 1500);
+      }
+    }
+  };
+
+  // Check word when user input length matches word length
+  useEffect(() => {
+    if (gameState.userInput.length === gameState.currentWord.length) {
+      checkWord();
+    }
+  }, [gameState.userInput, gameState.currentWord]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const resetGame = () => {
+    const initialWordLength = 3;
+    const wordsInRound: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      wordsInRound.push(getRandomWordByLength(initialWordLength));
+    }
+
+    console.log(`Resetting game with Round 1, ${initialWordLength}-letter words: ${wordsInRound.join(', ')}`);
+
+    setGameState({
+      currentWord: wordsInRound[0],
+      scrambledWord: scrambleWord(wordsInRound[0]),
+      userInput: '',
+      timeLeft: 30, // Reset to 30 seconds per word
+      score: 50, // Reset to 50 points
+      round: 1, // Reset to round 1
+      gameStatus: 'playing',
+      revealedLetters: 0,
+      currentWordIndex: 0,
+      wordsInRound,
+      currentWordLength: initialWordLength, // Reset to 3-letter words
+      usedLetters: new Set(), // Reset used letters
+    });
+    setNextRevealTime(Date.now() + 20000);
+  };
+
+  // Determine game over reason
+  const getGameOverReason = () => {
+    if (gameState.timeLeft <= 0) {
+      return "Time's up!";
+    } else if (gameState.score <= 0) {
+      return "Score went below 0!";
+    }
+    return "Game Over!";
+  };
+
+  // Get available letters (not yet used)
+  const getAvailableLetters = () => {
+    const available = [];
+    const letterCount = new Map<string, number>();
+    
+    // Count each letter in the scrambled word
+    for (const letter of gameState.scrambledWord) {
+      letterCount.set(letter, (letterCount.get(letter) || 0) + 1);
+    }
+    
+    // Subtract used letters
+    for (const letter of gameState.usedLetters) {
+      letterCount.set(letter, (letterCount.get(letter) || 0) - 1);
+    }
+    
+    // Add remaining letters
+    for (const [letter, count] of letterCount.entries()) {
+      for (let i = 0; i < count; i++) {
+        available.push(letter);
+      }
+    }
+    
+    return available;
+  };
+
+  if (gameState.gameStatus === 'gameOver') {
+    return (
+      <div className="max-w-md mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-lg text-center min-h-screen sm:min-h-0">
+        <h2 className="text-xl sm:text-2xl font-bold text-red-600 mb-4">{getGameOverReason()}</h2>
+        <p className="text-base sm:text-lg mb-2">Final Score: {gameState.score}</p>
+        <p className="text-base sm:text-lg mb-2">Rounds Completed: {gameState.round - 1}</p>
+        <p className="text-xs sm:text-sm text-gray-600 mb-4">
+          {gameState.timeLeft <= 0
+            ? "You ran out of time!"
+            : "Too many auto-revealed letters cost you the game!"}
+        </p>
+        <button
+          onClick={resetGame}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors touch-manipulation"
+        >
+          Play Again
+        </button>
+      </div>
+    );
+  }
+
+  const availableLetters = getAvailableLetters();
+
+  return (
+    <div className="max-w-md mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-lg min-h-screen sm:min-h-0">
+      {/* Timer and Score */}
+      <div className="text-center mb-4 sm:mb-6">
+        <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">
+          {formatTime(gameState.timeLeft)}
+        </div>
+        <div className="text-xs sm:text-sm text-gray-600 mb-2">
+          Round {gameState.round} | Score: {gameState.score}
+        </div>
+        <div className="text-xs text-blue-600 mb-2">
+          Word {gameState.currentWordIndex + 1} of 3 | {gameState.currentWordLength}-letter words
+        </div>
+        {gameState.revealedLetters > 0 && (
+          <div className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+            ⚠️ Auto-revealed letters: -{gameState.revealedLetters * 10} points
+          </div>
+        )}
+      </div>
+
+      {/* Available Letters Row */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3 text-center">Available Letters</h3>
+        <div className="flex justify-center gap-1 sm:gap-2 flex-wrap">
+          {availableLetters.map((letter, index) => (
+            <div
+              key={`${letter}-${index}`}
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center text-lg sm:text-xl font-bold shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              {letter}
+            </div>
+          ))}
+          {availableLetters.length === 0 && (
+            <div className="text-green-600 text-sm font-medium bg-green-50 px-3 py-2 rounded-lg border border-green-200">
+              🎉 All letters used! Word complete!
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* User Input Row */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3 text-center">Your Answer</h3>
+        
+        {/* Mobile-friendly input field that triggers keyboard */}
+        <div className="mb-4">
+          <div className="relative">
+            <input
+              ref={inputRef}
+              type="text"
+              value={gameState.userInput}
+              onChange={(e) => {
+                // Only allow letters and limit to word length
+                const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+                if (value.length <= gameState.currentWord.length) {
+                  setGameState(prev => ({
+                    ...prev,
+                    userInput: value,
+                    usedLetters: new Set(value.split(''))
+                  }));
+                }
+              }}
+              onFocus={() => {
+                // Show mobile keyboard
+                if (inputRef.current) {
+                  showKeyboard(inputRef.current);
+                }
+              }}
+              onBlur={() => {
+                // Hide mobile keyboard when input loses focus
+                hideKeyboard();
+              }}
+              placeholder="Tap to type..."
+              className="w-full p-3 pr-12 text-center text-xl font-mono border-2 border-blue-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="characters"
+              spellCheck="false"
+            />
+            {gameState.userInput.length > 0 && (
+              <button
+                onClick={() => {
+                  setGameState(prev => ({
+                    ...prev,
+                    userInput: '',
+                    usedLetters: new Set()
+                  }));
+                  // Focus back to input after clearing
+                  setTimeout(() => {
+                    if (inputRef.current) {
+                      inputRef.current.focus();
+                    }
+                  }, 100);
+                }}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-red-600 active:bg-red-700 transition-colors"
+                type="button"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+        
+        {/* Visual representation of the word */}
+        <div className="flex justify-center gap-2">
+          {gameState.currentWord.split('').map((_, index) => (
+            <div
+              key={index}
+              className={`w-10 h-10 sm:w-12 sm:h-12 border-2 rounded-lg flex items-center justify-center text-lg sm:text-xl font-bold transition-all duration-300 ${
+                index < gameState.userInput.length
+                  ? 'bg-green-500 text-white border-green-500'
+                  : index < gameState.revealedLetters
+                  ? 'bg-orange-500 text-white border-orange-500'
+                  : 'bg-gray-100 border-gray-300 text-gray-400'
+                             }`}
+            >
+              {index < gameState.userInput.length
+                ? gameState.userInput[index]
+                : index < gameState.revealedLetters
+                ? gameState.currentWord[index]
+                : ''}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Game Controls */}
+      <div className="space-y-3">
+        <button
+          onClick={handleBackspace}
+          disabled={gameState.userInput.length === 0}
+          className="w-full py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 active:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors touch-manipulation"
+        >
+          ← Back
+        </button>
+
+        <div className="text-center text-xs sm:text-sm text-gray-600">
+          {gameState.revealedLetters > 0 && (
+            <p className="text-orange-600">
+              Next letter revealed in: {Math.max(0, Math.ceil((nextRevealTime - Date.now()) / 1000))}s
+            </p>
+          )}
+          <p className="text-xs text-gray-500 mt-2">
+            💡 Tip: Tap the input field above to type! Letters disappear as you use them!
+          </p>
+        </div>
+      </div>
+
+      {/* Instructions */}
+      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+        <h4 className="font-semibold mb-2 text-sm sm:text-base">How to Play:</h4>
+        <ul className="text-xs sm:text-sm text-gray-600 space-y-1">
+          <li>• Tap the input field above to type letters</li>
+          <li>• Letters disappear from the available list as you use them</li>
+          <li>• Use the Back button to remove mistakes</li>
+          <li>• Letters auto-reveal every 20 seconds (costs 10 points each)</li>
+          <li>• Auto-revealed letters are automatically filled in!</li>
+          <li>• Complete 3 words per round, then difficulty increases</li>
+          <li>• Round {gameState.round}: {gameState.currentWordLength}-letter words</li>
+          <li>• Game ends if time runs out OR score goes below 0</li>
+          <li>• You have 30 seconds to complete each word!</li>
+        </ul>
+      </div>
+    </div>
+  );
+} 

@@ -8,6 +8,9 @@ import { generateMintSignature, CONTRACT_ADDRESS, CONTRACT_ABI, CHAIN_ID } from 
 // Removed parseUnits import as it's not used
 import { WalletConnectButton } from '@/components/connect-button';
 
+// Farcaster Mini App SDK
+import { sdk } from '@farcaster/miniapp-sdk';
+
 interface GameState {
   currentWord: string;
   scrambledWord: string;
@@ -156,6 +159,11 @@ export default function WordSpellingGame() {
       gameStatus: 'playing',
       revealedLetters: 0,
     }));
+
+    // Notify Farcaster Mini App that the app is ready
+    sdk.actions.ready().catch((error: any) => {
+      console.log('Failed to notify Farcaster SDK ready:', error);
+    });
   }, []);
 
   // Timer countdown

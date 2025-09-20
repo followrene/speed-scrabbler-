@@ -9,17 +9,17 @@ const inter = Inter({ subsets: ['latin'] });
 
 const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
 
-// Embed metadata for Farcaster sharing
-const frame = {
-  version: "1",
-  imageUrl: `${appUrl}/opengraph-image.png`,
+// Mini App metadata for Farcaster sharing (NOT Frame metadata)
+const miniApp = {
+  version: "1", // Must be "1", not "next"
+  imageUrl: `${appUrl}/opengraph-image.png`, // 3:2 aspect ratio
   button: {
-    title: "Launch Speed Scrabbler",
+    title: "Play Speed Scrabbler", // Max 32 characters
     action: {
       type: "launch_frame",
       name: "Speed Scrabbler",
       url: appUrl,
-      splashImageUrl: `${appUrl}/icon.png`,
+      splashImageUrl: `${appUrl}/icon.png`, // 200x200px
       splashBackgroundColor: "#ffffff",
     },
   },
@@ -35,15 +35,8 @@ export const metadata: Metadata = {
     images: [`${appUrl}/opengraph-image.png`],
   },
   other: {
-    // Farcaster frame metadata
-    "fc:frame": "vNext",
-    "fc:frame:image": `${appUrl}/opengraph-image.png`,
-    "fc:frame:button:1": "Play Speed Scrabbler",
-    "fc:frame:button:1:action": "link",
-    "fc:frame:button:1:target": appUrl,
-    
-    // Original frame metadata for compatibility
-    "fc:frame:json": JSON.stringify(frame),
+    // Farcaster Mini App metadata (NOT Frame metadata)
+    "fc:miniapp": JSON.stringify(miniApp),
   },
 };
 
