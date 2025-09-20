@@ -219,30 +219,30 @@ export default function WordSpellingGame() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-2">
-      <div className="max-w-xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Speed Scrabbler</h1>
-          <p className="text-gray-600">Unscramble the letters to form a word!</p>
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-1 rounded-lg">
+      <div className="max-w-lg mx-auto">
+        {/* Header - More compact */}
+        <div className="text-center mb-2">
+          <h1 className="text-xl font-bold text-gray-800 mb-1">Speed Scrabbler</h1>
+          <p className="text-sm text-gray-600">Unscramble the letters to form a word!</p>
         </div>
 
-        {/* Game Stats */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="bg-white rounded-lg p-3 text-center shadow-md">
-            <div className="text-base font-bold text-blue-600">{gameState.score}</div>
-            <div className="text-sm text-gray-600">Score</div>
+        {/* Game Stats - More compact */}
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <div className="bg-white rounded-lg p-2 text-center shadow-sm">
+            <div className="text-sm font-bold text-blue-600">{gameState.score}</div>
+            <div className="text-xs text-gray-600">Score</div>
           </div>
-          <div className="bg-white rounded-lg p-3 text-center shadow-md">
-            <div className="text-base font-bold text-red-600">{gameState.timeLeft}</div>
-            <div className="text-sm text-gray-600">Time Left</div>
+          <div className="bg-white rounded-lg p-2 text-center shadow-sm">
+            <div className="text-sm font-bold text-red-600">{gameState.timeLeft}</div>
+            <div className="text-xs text-gray-600">Time Left</div>
           </div>
         </div>
 
-        {/* Scrambled Word Display */}
-        <div className="bg-white rounded-lg p-3 mb-3 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 text-center">Scrambled Word</h3>
-          <div className="flex justify-center gap-2">
+        {/* Scrambled Word Display - More compact */}
+        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <h3 className="text-base font-semibold mb-2 text-center">Scrambled Word</h3>
+          <div className="flex justify-center gap-1">
             {gameState.scrambledWord.split('').map((letter, index) => (
               <div
                 key={index}
@@ -254,11 +254,11 @@ export default function WordSpellingGame() {
           </div>
         </div>
 
-        {/* Input Section */}
-        <div className="bg-white rounded-lg p-3 mb-3 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 text-center">Your Answer</h3>
+        {/* Input Section - More compact */}
+        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <h3 className="text-base font-semibold mb-2 text-center">Your Answer</h3>
           
-          <div className="mb-4">
+          <div className="mb-2">
             <div className="relative">
               <input
                 ref={inputRef}
@@ -306,7 +306,7 @@ export default function WordSpellingGame() {
                   hideKeyboard();
                 }}
                 placeholder="Type your answer..."
-                className="w-full p-3 text-center text-lg font-mono border-2 border-blue-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+                className="w-full p-2 text-center text-base font-mono border-2 border-blue-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="characters"
@@ -315,15 +315,15 @@ export default function WordSpellingGame() {
             </div>
           </div>
           
-          <p className="text-sm text-gray-600 text-center">
+          <p className="text-xs text-gray-600 text-center">
             Type the complete word to automatically check your answer
           </p>
         </div>
 
-        {/* Visual representation of the word */}
-        <div className="bg-white rounded-lg p-3 mb-3 shadow-md">
-          <h3 className="text-lg font-semibold mb-3 text-center">Progress</h3>
-          <div className="flex justify-center gap-2">
+        {/* Visual representation of the word - More compact */}
+        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <h3 className="text-base font-semibold mb-2 text-center">Progress</h3>
+          <div className="flex justify-center gap-1">
             {gameState.currentWord.split('').map((_, index) => (
               <div
                 key={index}
@@ -347,17 +347,17 @@ export default function WordSpellingGame() {
           </div>
         </div>
 
-        {/* Game Over Screen */}
-        {gameState.gameStatus === 'gameOver' && (
-          <div className="bg-white rounded-lg p-6 shadow-md text-center">
-            <h2 className="text-xl font-bold text-red-600 mb-4">Game Over!</h2>
-            <p className="text-2xl mb-2">Final Score: <span className="font-bold text-blue-600">{gameState.score}</span></p>
-            <p className="text-gray-600 mb-6">The word was: <span className="font-bold">{gameState.currentWord}</span></p>
+            {/* Game Over Screen - More compact */}
+            {gameState.gameStatus === 'gameOver' && (
+              <div className="bg-white rounded-lg p-3 shadow-sm text-center">
+            <h2 className="text-lg font-bold text-red-600 mb-2">Game Over!</h2>
+            <p className="text-lg mb-2">Final Score: <span className="font-bold text-blue-600">{gameState.score}</span></p>
+            <p className="text-sm text-gray-600 mb-3">The word was: <span className="font-bold">{gameState.currentWord}</span></p>
             
             {/* Claim Reward Section */}
             {gameState.score > 0 && (
-              <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-                <h3 className="text-lg font-semibold mb-2 text-orange-800">🎉 Claim Your Reward!</h3>
+              <div className="mb-3 p-2 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                <h3 className="text-base font-semibold mb-1 text-orange-800">🎉 Claim Your Reward!</h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Earn <span className="font-bold">{gameState.score} Speed Scrabble Stars</span> tokens for your performance!
                 </p>
@@ -418,12 +418,12 @@ export default function WordSpellingGame() {
               </div>
             )}
             
-            <button
-              onClick={startNewGame}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Play Again
-            </button>
+                <button
+                  onClick={startNewGame}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm"
+                >
+                  Play Again
+                </button>
           </div>
         )}
       </div>

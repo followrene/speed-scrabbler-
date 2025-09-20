@@ -14,56 +14,56 @@ export default function Home() {
 
   const renderWelcomeScreen = () => (
     <>
-      {/* Hero Section - More Compact */}
-      <section className="relative py-12 lg:py-20">
-        <div className="container px-4 mx-auto max-w-7xl">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Game Logo */}
-            <div className="flex justify-center mb-6">
-              <SimpleIcon size={160} className="drop-shadow-2xl animate-pulse" />
+      {/* Hero Section - Optimized for Farcaster */}
+      <section className="relative py-4 lg:py-6">
+        <div className="container px-3 mx-auto max-w-4xl">
+          <div className="text-center">
+            {/* Game Logo - Smaller */}
+            <div className="flex justify-center mb-3">
+              <SimpleIcon size={120} className="drop-shadow-xl" />
             </div>
 
-            {/* Main Heading */}
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+            {/* Main Heading - Smaller fonts */}
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2">
               Welcome to{" "}
               <span className="text-primary">Speed Scrabbler</span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+            {/* Subtitle - Smaller and more compact */}
+            <p className="text-sm md:text-base text-muted-foreground mb-4 max-w-xl mx-auto leading-snug">
               Test your spelling skills with our word scramble game! Unscramble letters to form words while racing against a 45-second timer per word. 
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            {/* CTA Buttons - More compact */}
+            <div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-4">
               <Button 
-                size="lg" 
-                className="px-8 py-3 text-base font-medium"
+                size="default" 
+                className="px-6 py-2 text-sm font-medium"
                 onClick={() => setCurrentScreen('game')}
               >
                 Start Playing
               </Button>
               <Button 
-                size="lg" 
+                size="default" 
                 variant="outline" 
-                className="px-8 py-3 text-base font-medium"
+                className="px-6 py-2 text-sm font-medium"
                 onClick={() => setCurrentScreen('features')}
               >
                 Learn More
               </Button>
               <Link href="/custom-words">
                 <Button 
-                  size="lg" 
+                  size="default" 
                   variant="outline" 
-                  className="px-8 py-3 text-base font-medium"
+                  className="px-6 py-2 text-sm font-medium"
                 >
                   Custom Word List
                 </Button>
               </Link>
             </div>
-            {/* Badge - Moved to bottom */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium bg-primary/10 text-primary rounded-full border border-primary/20">
-              <MessageCircle className="h-4 w-4" />
+            {/* Badge - Smaller */}
+            <div className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full border border-primary/20">
+              <MessageCircle className="h-3 w-3" />
               Built on Celo + Farcaster
             </div>
           </div>
@@ -73,21 +73,22 @@ export default function Home() {
   );
 
   const renderGameScreen = () => (
-    <section className="py-12">
-      <div className="container px-4 mx-auto max-w-7xl">
+    <section className="py-2">
+      <div className="container px-2 mx-auto max-w-4xl">
         {/* Game Component */}
         <div className="flex justify-center">
           <WordSpellingGame />
         </div>
         
-        {/* Back Button - Moved to bottom */}
-        <div className="mt-12 text-center">
+        {/* Back Button - More compact */}
+        <div className="mt-4 text-center">
           <Button 
             variant="outline" 
+            size="sm"
             onClick={() => setCurrentScreen('welcome')}
-            className="flex items-center gap-2 mx-auto"
+            className="flex items-center gap-1 mx-auto text-xs"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3 w-3" />
             Back to Menu
           </Button>
         </div>
