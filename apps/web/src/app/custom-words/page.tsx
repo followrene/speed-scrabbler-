@@ -60,78 +60,76 @@ export default function CustomWordsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="mb-8">
+    <main className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8 max-w-3xl">
+        {/* Header - Apple Design */}
+        <div className="mb-8 apple-fade-in">
           <div className="flex items-center gap-4 mb-6">
             <Link href="/">
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <button className="apple-button-secondary flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Game
-              </Button>
+              </button>
             </Link>
           </div>
           
-          <h1 className="text-4xl font-bold mb-4">Custom Word List</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="apple-text-large text-black mb-3">Custom Word List</h1>
+          <p className="apple-text-body">
             Add up to 100 custom words that will be used first in the game, before the default word list.
           </p>
         </div>
 
-        {/* Instructions */}
-        <div className="bg-muted/50 p-6 rounded-lg mb-6">
-          <h2 className="text-xl font-semibold mb-3">Instructions:</h2>
-          <ul className="space-y-2 text-muted-foreground">
-            <li>• Enter one word per line</li>
-            <li>• Words must be 3-9 letters long</li>
-            <li>• Maximum 100 words allowed</li>
-            <li>• Words will be converted to uppercase automatically</li>
-            <li>• Custom words will be used first in random order</li>
-            <li>• After all custom words are used, the game will use the default word list</li>
+        {/* Instructions - Apple Design */}
+        <div className="apple-card p-6 mb-6">
+          <h2 className="apple-text-medium text-black mb-3">Instructions</h2>
+          <ul className="space-y-2">
+            <li className="apple-text-body">• Enter one word per line</li>
+            <li className="apple-text-body">• Words must be 3-9 letters long</li>
+            <li className="apple-text-body">• Maximum 100 words allowed</li>
+            <li className="apple-text-body">• Words will be converted to uppercase automatically</li>
+            <li className="apple-text-body">• Custom words will be used first in random order</li>
+            <li className="apple-text-body">• After all custom words are used, the game will use the default word list</li>
           </ul>
         </div>
 
-        {/* Word Counter */}
+        {/* Word Counter - Apple Design */}
         <div className="flex justify-between items-center mb-4">
-          <span className="text-sm text-muted-foreground">
+          <span className="apple-text-small">
             Words: {wordCount}/100
           </span>
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <button 
               onClick={handleClear}
-              className="flex items-center gap-2"
+              className="apple-button-secondary flex items-center gap-2 text-sm px-3 py-2"
             >
               <Trash2 className="h-4 w-4" />
               Clear All
-            </Button>
-            <Button 
+            </button>
+            <button 
               onClick={handleSave}
-              className="flex items-center gap-2"
+              className="apple-button-primary flex items-center gap-2 text-sm px-3 py-2"
             >
               <Save className="h-4 w-4" />
               Save Words
-            </Button>
+            </button>
           </div>
         </div>
 
-        {/* Text Area */}
+        {/* Text Area - Apple Design */}
         <div className="mb-6">
           <textarea
             value={customWords}
             onChange={handleTextChange}
             placeholder="Enter your custom words here, one per line...&#10;&#10;Example:&#10;CAT&#10;DOG&#10;HOUSE&#10;COMPUTER"
-            className="w-full h-96 p-4 border border-input rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="apple-input w-full h-96 resize-none font-mono"
             maxLength={1000} // Reasonable limit for text area
           />
         </div>
 
-        {/* Preview */}
+        {/* Preview - Apple Design */}
         {customWords.trim() && (
-          <div className="bg-muted/50 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-3">Preview ({wordCount} words):</h3>
+          <div className="apple-card p-6 mb-6">
+            <h3 className="apple-text-medium text-black mb-3">Preview ({wordCount} words)</h3>
             <div className="flex flex-wrap gap-2">
               {customWords.split('\n')
                 .map(word => word.trim().toUpperCase())
@@ -140,13 +138,13 @@ export default function CustomWordsPage() {
                 .map((word, index) => (
                   <span 
                     key={index}
-                    className="px-2 py-1 bg-primary/10 text-primary rounded text-sm"
+                    className="px-3 py-1 bg-gray-100 text-black rounded-lg text-sm font-medium"
                   >
                     {word}
                   </span>
                 ))}
               {wordCount > 20 && (
-                <span className="px-2 py-1 bg-muted text-muted-foreground rounded text-sm">
+                <span className="px-3 py-1 bg-gray-200 text-gray-600 rounded-lg text-sm">
                   +{wordCount - 20} more...
                 </span>
               )}
@@ -154,25 +152,20 @@ export default function CustomWordsPage() {
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex justify-center gap-4 mt-8">
-          <Button 
-            size="lg" 
+        {/* Action Buttons - Apple Design */}
+        <div className="flex justify-center gap-3 mt-8">
+          <button 
             onClick={handleSave}
-            className="flex items-center gap-2"
+            className="apple-button-primary flex items-center gap-2 min-w-[160px]"
           >
-            <Save className="h-5 w-5" />
+            <Save className="h-4 w-4" />
             Save Custom Words
-          </Button>
+          </button>
           <Link href="/">
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-5 w-5" />
+            <button className="apple-button-secondary flex items-center gap-2 min-w-[160px]">
+              <ArrowLeft className="h-4 w-4" />
               Back to Game
-            </Button>
+            </button>
           </Link>
         </div>
       </div>

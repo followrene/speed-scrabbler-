@@ -219,34 +219,33 @@ export default function WordSpellingGame() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-1 rounded-lg">
-      <div className="max-w-lg mx-auto">
-        {/* Header - More compact */}
-        <div className="text-center mb-2">
-          <h1 className="text-xl font-bold text-gray-800 mb-1">Speed Scrabbler</h1>
-          <p className="text-sm text-gray-600">Unscramble the letters to form a word!</p>
+    <div className="apple-game-container max-w-lg mx-auto">
+      {/* Header - Apple Design */}
+      <div className="text-center mb-4">
+        <h1 className="apple-text-medium text-black mb-1">Speed Scrabbler</h1>
+        <p className="apple-text-small">Unscramble the letters to form a word</p>
+      </div>
+
+        {/* Game Stats - Apple Design */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="apple-card p-3 text-center">
+            <div className="text-lg font-semibold text-black">{gameState.score}</div>
+            <div className="apple-text-small">Score</div>
+          </div>
+          <div className="apple-card p-3 text-center">
+            <div className="text-lg font-semibold text-black">{gameState.timeLeft}</div>
+            <div className="apple-text-small">Time Left</div>
+          </div>
         </div>
 
-        {/* Game Stats - More compact */}
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div className="bg-white rounded-lg p-2 text-center shadow-sm">
-            <div className="text-sm font-bold text-blue-600">{gameState.score}</div>
-            <div className="text-xs text-gray-600">Score</div>
-          </div>
-          <div className="bg-white rounded-lg p-2 text-center shadow-sm">
-            <div className="text-sm font-bold text-red-600">{gameState.timeLeft}</div>
-            <div className="text-xs text-gray-600">Time Left</div>
-          </div>
-        </div>
-
-        {/* Scrambled Word Display - More compact */}
-        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
-          <h3 className="text-base font-semibold mb-2 text-center">Scrambled Word</h3>
-          <div className="flex justify-center gap-1">
+        {/* Scrambled Word Display - Apple Design */}
+        <div className="apple-card p-4 mb-4">
+          <h3 className="apple-text-medium text-black mb-3 text-center">Scrambled Word</h3>
+          <div className="flex justify-center gap-2">
             {gameState.scrambledWord.split('').map((letter, index) => (
               <div
                 key={index}
-                className="w-8 h-8 border-2 border-blue-300 rounded-lg flex items-center justify-center text-base font-bold bg-blue-50 text-blue-800"
+                className="apple-letter-box"
               >
                 {letter}
               </div>
@@ -254,87 +253,85 @@ export default function WordSpellingGame() {
           </div>
         </div>
 
-        {/* Input Section - More compact */}
-        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
-          <h3 className="text-base font-semibold mb-2 text-center">Your Answer</h3>
+        {/* Input Section - Apple Design */}
+        <div className="apple-card p-4 mb-4">
+          <h3 className="apple-text-medium text-black mb-3 text-center">Your Answer</h3>
           
-          <div className="mb-2">
-            <div className="relative">
-              <input
-                ref={inputRef}
-                type="text"
-                value={gameState.userInput}
-                onChange={(e) => {
-                  const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-                  setGameState(prev => ({
-                    ...prev,
-                    userInput: value,
-                  }));
-                  
-                  // Auto-check if the word is complete and correct
-                  if (value.length === gameState.currentWord.length) {
-                    setTimeout(() => {
-                      if (value === gameState.currentWord.toUpperCase()) {
-                        // Correct word! Calculate points: seconds left × word length
-                        const pointsEarned = gameState.timeLeft * gameState.currentWord.length;
+          <div className="mb-3">
+            <input
+              ref={inputRef}
+              type="text"
+              value={gameState.userInput}
+              onChange={(e) => {
+                const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+                setGameState(prev => ({
+                  ...prev,
+                  userInput: value,
+                }));
+                
+                // Auto-check if the word is complete and correct
+                if (value.length === gameState.currentWord.length) {
+                  setTimeout(() => {
+                    if (value === gameState.currentWord.toUpperCase()) {
+                      // Correct word! Calculate points: seconds left × word length
+                      const pointsEarned = gameState.timeLeft * gameState.currentWord.length;
 
-                        setGameState(prev => ({
-                          ...prev,
-                          score: prev.score + pointsEarned,
-                          userInput: '',
-                          revealedLetters: 0,
-                        }));
+                      setGameState(prev => ({
+                        ...prev,
+                        score: prev.score + pointsEarned,
+                        userInput: '',
+                        revealedLetters: 0,
+                      }));
 
-                        // Get next word and reset timer
-                        const newWord = getRandomWord();
-                        setGameState(prev => ({
-                          ...prev,
-                          currentWord: newWord,
-                          scrambledWord: scrambleWord(newWord),
-                          timeLeft: 45, // Reset timer for next word
-                        }));
-                      }
-                    }, 100); // Small delay to ensure state is updated
-                  }
-                }}
-                onFocus={() => {
-                  if (inputRef.current) {
-                    showKeyboard(inputRef.current);
-                  }
-                }}
-                onBlur={() => {
-                  hideKeyboard();
-                }}
-                placeholder="Type your answer..."
-                className="w-full p-2 text-center text-base font-mono border-2 border-blue-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="characters"
-                spellCheck="false"
-              />
-            </div>
+                      // Get next word and reset timer
+                      const newWord = getRandomWord();
+                      setGameState(prev => ({
+                        ...prev,
+                        currentWord: newWord,
+                        scrambledWord: scrambleWord(newWord),
+                        timeLeft: 45, // Reset timer for next word
+                      }));
+                    }
+                  }, 100); // Small delay to ensure state is updated
+                }
+              }}
+              onFocus={() => {
+                if (inputRef.current) {
+                  showKeyboard(inputRef.current);
+                }
+              }}
+              onBlur={() => {
+                hideKeyboard();
+              }}
+              placeholder="Type your answer..."
+              className="apple-input w-full text-center text-lg font-mono"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="characters"
+              spellCheck="false"
+            />
           </div>
           
-          <p className="text-xs text-gray-600 text-center">
+          <p className="apple-text-small text-center">
             Type the complete word to automatically check your answer
           </p>
         </div>
 
-        {/* Visual representation of the word - More compact */}
-        <div className="bg-white rounded-lg p-2 mb-2 shadow-sm">
-          <h3 className="text-base font-semibold mb-2 text-center">Progress</h3>
-          <div className="flex justify-center gap-1">
+        {/* Visual representation of the word - Apple Design */}
+        <div className="apple-card p-4 mb-4">
+          <h3 className="apple-text-medium text-black mb-3 text-center">Progress</h3>
+          <div className="flex justify-center gap-2">
             {gameState.currentWord.split('').map((_, index) => (
               <div
                 key={index}
-                className={`w-8 h-8 border-2 rounded-lg flex items-center justify-center text-base font-bold transition-all duration-300 ${
+                className={`apple-letter-box transition-all duration-300 ${
                   index < gameState.userInput.length
                     ? gameState.userInput[index] === gameState.currentWord[index]
-                      ? 'bg-green-500 text-white border-green-500' // Correct letter - green
-                      : 'bg-red-500 text-white border-red-500'     // Wrong letter - red
+                      ? 'correct' // Correct letter - green
+                      : 'incorrect' // Wrong letter - red
                     : index < gameState.revealedLetters
-                    ? 'bg-green-500 text-white border-green-500'   // Revealed letter - green
-                    : 'bg-gray-100 border-gray-300 text-gray-400'  // Empty - gray
+                    ? 'revealed' // Revealed letter - blue
+                    : '' // Empty - default white
                 }`}
               >
                 {index < gameState.userInput.length
@@ -347,19 +344,19 @@ export default function WordSpellingGame() {
           </div>
         </div>
 
-            {/* Game Over Screen - More compact */}
+            {/* Game Over Screen - Apple Design */}
             {gameState.gameStatus === 'gameOver' && (
-              <div className="bg-white rounded-lg p-3 shadow-sm text-center">
-            <h2 className="text-lg font-bold text-red-600 mb-2">Game Over!</h2>
-            <p className="text-lg mb-2">Final Score: <span className="font-bold text-blue-600">{gameState.score}</span></p>
-            <p className="text-sm text-gray-600 mb-3">The word was: <span className="font-bold">{gameState.currentWord}</span></p>
+              <div className="apple-card p-6 text-center apple-fade-in">
+            <h2 className="apple-text-medium text-black mb-3">Game Over!</h2>
+            <p className="text-xl mb-3 text-black">Final Score: <span className="font-semibold">{gameState.score}</span></p>
+            <p className="apple-text-body mb-4">The word was: <span className="font-semibold text-black">{gameState.currentWord}</span></p>
             
             {/* Claim Reward Section */}
             {gameState.score > 0 && (
-              <div className="mb-3 p-2 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-                <h3 className="text-base font-semibold mb-1 text-orange-800">🎉 Claim Your Reward!</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Earn <span className="font-bold">{gameState.score} Speed Scrabble Stars</span> tokens for your performance!
+              <div className="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 className="apple-text-medium text-black mb-2">🎉 Claim Your Reward!</h3>
+                <p className="apple-text-body mb-4">
+                  Earn <span className="font-semibold text-black">{gameState.score} Speed Scrabble Stars</span> tokens for your performance!
                 </p>
                 
                 {!isConnected ? (
@@ -420,7 +417,7 @@ export default function WordSpellingGame() {
             
                 <button
                   onClick={startNewGame}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm"
+                  className="apple-button-primary"
                 >
                   Play Again
                 </button>
