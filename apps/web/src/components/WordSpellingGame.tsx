@@ -226,204 +226,207 @@ export default function WordSpellingGame() {
         <p className="apple-text-small">Unscramble the letters to form a word</p>
       </div>
 
-        {/* Game Stats - Apple Design */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="apple-card p-3 text-center">
-            <div className="text-lg font-semibold text-black">{gameState.score}</div>
-            <div className="apple-text-small">Score</div>
+      {gameState.gameStatus === 'playing' && (
+        <>
+          {/* Game Stats - Apple Design */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="apple-card p-3 text-center">
+              <div className="text-lg font-semibold text-black">{gameState.score}</div>
+              <div className="apple-text-small">Score</div>
+            </div>
+            <div className="apple-card p-3 text-center">
+              <div className="text-lg font-semibold text-black">{gameState.timeLeft}</div>
+              <div className="apple-text-small">Time Left</div>
+            </div>
           </div>
-          <div className="apple-card p-3 text-center">
-            <div className="text-lg font-semibold text-black">{gameState.timeLeft}</div>
-            <div className="apple-text-small">Time Left</div>
+
+          {/* Scrambled Word Display - Apple Design */}
+          <div className="apple-card p-4 mb-4">
+            <h3 className="apple-text-medium text-black mb-3 text-center">Scrambled Word</h3>
+            <div className="flex justify-center gap-2">
+              {gameState.scrambledWord.split('').map((letter, index) => (
+                <div
+                  key={index}
+                  className="apple-letter-box"
+                >
+                  {letter}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Scrambled Word Display - Apple Design */}
-        <div className="apple-card p-4 mb-4">
-          <h3 className="apple-text-medium text-black mb-3 text-center">Scrambled Word</h3>
-          <div className="flex justify-center gap-2">
-            {gameState.scrambledWord.split('').map((letter, index) => (
-              <div
-                key={index}
-                className="apple-letter-box"
-              >
-                {letter}
-              </div>
-            ))}
+          {/* Input Section - Apple Design */}
+          <div className="apple-card p-4 mb-4">
+            <h3 className="apple-text-medium text-black mb-3 text-center">Your Answer</h3>
+            
+            <div className="mb-3">
+              <input
+                ref={inputRef}
+                type="text"
+                value={gameState.userInput}
+                onChange={(e) => {
+                  const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+                  setGameState(prev => ({
+                    ...prev,
+                    userInput: value,
+                  }));
+                  
+                  // Auto-check if the word is complete and correct
+                  if (value.length === gameState.currentWord.length) {
+                    setTimeout(() => {
+                      if (value === gameState.currentWord.toUpperCase()) {
+                        // Correct word! Calculate points: seconds left × word length
+                        const pointsEarned = gameState.timeLeft * gameState.currentWord.length;
+
+                        setGameState(prev => ({
+                          ...prev,
+                          score: prev.score + pointsEarned,
+                          userInput: '',
+                          revealedLetters: 0,
+                        }));
+
+                        // Get next word and reset timer
+                        const newWord = getRandomWord();
+                        setGameState(prev => ({
+                          ...prev,
+                          currentWord: newWord,
+                          scrambledWord: scrambleWord(newWord),
+                          timeLeft: 45, // Reset timer for next word
+                        }));
+                      }
+                    }, 100); // Small delay to ensure state is updated
+                  }
+                }}
+                onFocus={() => {
+                  if (inputRef.current) {
+                    showKeyboard(inputRef.current);
+                  }
+                }}
+                onBlur={() => {
+                  hideKeyboard();
+                }}
+                placeholder="Type your answer..."
+                className="apple-input w-full text-center text-lg font-mono"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="characters"
+                spellCheck="false"
+              />
+            </div>
+            
+            <p className="apple-text-small text-center">
+              Type the complete word to automatically check your answer
+            </p>
           </div>
-        </div>
 
-        {/* Input Section - Apple Design */}
-        <div className="apple-card p-4 mb-4">
-          <h3 className="apple-text-medium text-black mb-3 text-center">Your Answer</h3>
-          
-          <div className="mb-3">
-            <input
-              ref={inputRef}
-              type="text"
-              value={gameState.userInput}
-              onChange={(e) => {
-                const value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-                setGameState(prev => ({
-                  ...prev,
-                  userInput: value,
-                }));
-                
-                // Auto-check if the word is complete and correct
-                if (value.length === gameState.currentWord.length) {
-                  setTimeout(() => {
-                    if (value === gameState.currentWord.toUpperCase()) {
-                      // Correct word! Calculate points: seconds left × word length
-                      const pointsEarned = gameState.timeLeft * gameState.currentWord.length;
-
-                      setGameState(prev => ({
-                        ...prev,
-                        score: prev.score + pointsEarned,
-                        userInput: '',
-                        revealedLetters: 0,
-                      }));
-
-                      // Get next word and reset timer
-                      const newWord = getRandomWord();
-                      setGameState(prev => ({
-                        ...prev,
-                        currentWord: newWord,
-                        scrambledWord: scrambleWord(newWord),
-                        timeLeft: 45, // Reset timer for next word
-                      }));
-                    }
-                  }, 100); // Small delay to ensure state is updated
-                }
-              }}
-              onFocus={() => {
-                if (inputRef.current) {
-                  showKeyboard(inputRef.current);
-                }
-              }}
-              onBlur={() => {
-                hideKeyboard();
-              }}
-              placeholder="Type your answer..."
-              className="apple-input w-full text-center text-lg font-mono"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="characters"
-              spellCheck="false"
-            />
-          </div>
-          
-          <p className="apple-text-small text-center">
-            Type the complete word to automatically check your answer
-          </p>
-        </div>
-
-        {/* Visual representation of the word - Apple Design */}
-        <div className="apple-card p-4 mb-4">
-          <h3 className="apple-text-medium text-black mb-3 text-center">Progress</h3>
-          <div className="flex justify-center gap-2">
-            {gameState.currentWord.split('').map((_, index) => (
-              <div
-                key={index}
-                className={`apple-letter-box transition-all duration-300 ${
-                  index < gameState.userInput.length
-                    ? gameState.userInput[index] === gameState.currentWord[index]
-                      ? 'correct' // Correct letter - green
-                      : 'incorrect' // Wrong letter - red
+          {/* Visual representation of the word - Apple Design */}
+          <div className="apple-card p-4 mb-4">
+            <h3 className="apple-text-medium text-black mb-3 text-center">Progress</h3>
+            <div className="flex justify-center gap-2">
+              {gameState.currentWord.split('').map((_, index) => (
+                <div
+                  key={index}
+                  className={`apple-letter-box transition-all duration-300 ${
+                    index < gameState.userInput.length
+                      ? gameState.userInput[index] === gameState.currentWord[index]
+                        ? 'correct' // Correct letter - green
+                        : 'incorrect' // Wrong letter - red
+                      : index < gameState.revealedLetters
+                      ? 'revealed' // Revealed letter - blue
+                      : '' // Empty - default white
+                  }`}
+                >
+                  {index < gameState.userInput.length
+                    ? gameState.userInput[index]
                     : index < gameState.revealedLetters
-                    ? 'revealed' // Revealed letter - blue
-                    : '' // Empty - default white
-                }`}
-              >
-                {index < gameState.userInput.length
-                  ? gameState.userInput[index]
-                  : index < gameState.revealedLetters
-                  ? gameState.currentWord[index]
-                  : ''}
-              </div>
-            ))}
+                    ? gameState.currentWord[index]
+                    : ''}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
+      )}
 
-            {/* Game Over Screen - Apple Design */}
-            {gameState.gameStatus === 'gameOver' && (
-              <div className="apple-card p-6 text-center apple-fade-in">
-            <h2 className="apple-text-medium text-black mb-3">Game Over!</h2>
-            <p className="text-xl mb-3 text-black">Final Score: <span className="font-semibold">{gameState.score}</span></p>
-            <p className="apple-text-body mb-4">The word was: <span className="font-semibold text-black">{gameState.currentWord}</span></p>
-            
-            {/* Claim Reward Section */}
-            {gameState.score > 0 && (
-              <div className="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                <h3 className="apple-text-medium text-black mb-2">🎉 Claim Your Reward!</h3>
-                <p className="apple-text-body mb-4">
-                  Earn <span className="font-semibold text-black">{gameState.score} Speed Scrabble Stars</span> tokens for your performance!
-                </p>
-                
-                {!isConnected ? (
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-4">Connect your Celo wallet to claim your tokens</p>
-                    <WalletConnectButton className="mx-auto" />
-                  </div>
-                ) : claimState.status === 'idle' ? (
-                  <button
-                    onClick={handleClaimReward}
-                    className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition-colors shadow-lg"
-                  >
-                    Claim {gameState.score} Tokens
-                  </button>
-                ) : claimState.status === 'generating' ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600 mr-2"></div>
-                    <span>Generating signature...</span>
-                  </div>
-                ) : claimState.status === 'signing' ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600 mr-2"></div>
-                    <span>Please sign the transaction...</span>
-                  </div>
-                ) : claimState.status === 'pending' ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600 mr-2"></div>
-                    <span>Processing transaction...</span>
-                  </div>
-                ) : claimState.status === 'success' ? (
-                  <div className="text-green-600">
-                    <div className="text-4xl mb-2">🎉</div>
-                    <p className="font-semibold mb-2">Tokens claimed successfully!</p>
-                    {writeData && (
-                      <a
-                        href={`https://celoscan.io/tx/${writeData}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 underline text-sm"
-                      >
-                        View on Celoscan
-                      </a>
-                    )}
-                  </div>
-                ) : claimState.status === 'error' ? (
-                  <div className="text-red-600">
-                    <p className="mb-2">❌ {claimState.error}</p>
-                    <button
-                      onClick={resetClaimState}
-                      className="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors"
-                    >
-                      Try Again
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-            )}
-            
+      {/* Game Over Screen - Apple Design */}
+      {gameState.gameStatus === 'gameOver' && (
+        <div className="apple-card p-6 text-center apple-fade-in">
+          <h2 className="apple-text-medium text-black mb-3">Game Over!</h2>
+          <p className="text-xl mb-3 text-black">Final Score: <span className="font-semibold">{gameState.score}</span></p>
+          <p className="apple-text-body mb-4">The word was: <span className="font-semibold text-black">{gameState.currentWord}</span></p>
+          
+          {/* Claim Reward Section */}
+          {gameState.score > 0 && (
+            <div className="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <h3 className="apple-text-medium text-black mb-2">🎉 Claim Your Reward!</h3>
+              <p className="apple-text-body mb-4">
+                Earn <span className="font-semibold text-black">{gameState.score} Speed Scrabble Stars</span> tokens for your performance!
+              </p>
+              
+              {!isConnected ? (
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-4">Connect your Celo wallet to claim your tokens</p>
+                  <WalletConnectButton className="mx-auto" />
+                </div>
+              ) : claimState.status === 'idle' ? (
                 <button
-                  onClick={startNewGame}
+                  onClick={handleClaimReward}
                   className="apple-button-primary"
                 >
-                  Play Again
+                  Claim {gameState.score} Tokens
                 </button>
-          </div>
-        )}
-      </div>
+              ) : claimState.status === 'generating' ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600 mr-2"></div>
+                  <span className="apple-text-body">Generating signature...</span>
+                </div>
+              ) : claimState.status === 'signing' ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600 mr-2"></div>
+                  <span className="apple-text-body">Please sign the transaction...</span>
+                </div>
+              ) : claimState.status === 'pending' ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600 mr-2"></div>
+                  <span className="apple-text-body">Processing transaction...</span>
+                </div>
+              ) : claimState.status === 'success' ? (
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🎉</div>
+                  <p className="apple-text-body font-semibold mb-2 text-green-600">Tokens claimed successfully!</p>
+                  {writeData && (
+                    <a
+                      href={`https://celoscan.io/tx/${writeData}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="apple-text-small text-blue-600 hover:text-blue-800 underline"
+                    >
+                      View on Celoscan
+                    </a>
+                  )}
+                </div>
+              ) : claimState.status === 'error' ? (
+                <div className="text-center">
+                  <p className="apple-text-body mb-2 text-red-600">❌ {claimState.error}</p>
+                  <button
+                    onClick={resetClaimState}
+                    className="apple-button-secondary"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          )}
+          
+          <button
+            onClick={startNewGame}
+            className="apple-button-primary mt-4"
+          >
+            Play Again
+          </button>
+        </div>
+      )}
     </div>
   );
 }
