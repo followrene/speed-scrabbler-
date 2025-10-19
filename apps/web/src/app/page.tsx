@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Zap, MessageCircle, Users, ArrowLeft } from "lucide-react";
 import WordSpellingGame from "@/components/WordSpellingGame";
 import SimpleIcon from "@/components/SimpleIcon";
+import TipButton from "@/components/TipButton";
 
 type GameScreen = 'welcome' | 'game' | 'features';
 
@@ -55,10 +56,13 @@ export default function Home() {
             </div>
 
             {/* Badge - Minimal Apple Style */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-full border border-gray-200">
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-full border border-gray-200 mb-6">
               <MessageCircle className="h-4 w-4" />
               Built on Celo + Farcaster
             </div>
+
+            {/* Tip Button */}
+            <TipButton className="mt-4" />
           </div>
         </div>
       </section>
